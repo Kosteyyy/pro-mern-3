@@ -5,7 +5,7 @@ import "./style.css";
 class IssueFilter extends React.Component {
 	render() {
 		return (
-			<div>This is issue Filter</div>
+			<div>This is issue Filter For double servers</div>
 		);
 	}
 }
@@ -59,7 +59,7 @@ function IssueTable ({ issues }) {
 
 async function graphQLFetch(query, variables = {}) {
 	try {
-		const response = await fetch('/graphql', {
+		const response = await fetch('http://localhost:3000/graphql', {
 			method: 'POST',
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify({ query, variables })

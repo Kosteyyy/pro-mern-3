@@ -1,13 +1,13 @@
 const fs = require('fs');
+require('dotenv').config();
 const express = require('express');
 const { ApolloServer, UserInputError } = require('apollo-server-express');
 const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
 const {MongoClient } = require('mongodb');
 
-//const url = 'mongodb://localhost/issuetracker';
-//For Atlas
-const url = 'mongodb+srv://Kosteyyy:Kosteyyy1@cluster0.nru2m.mongodb.net/issuetracker?retryWrites=true&w=majority';
+const url = process.env.DB_URL || 'mongodb://localhost/issuetracker';
+const port = process.env.API_SERVER_PORT || 3000;
 
 let db;
 
@@ -91,7 +91,7 @@ async function connectToDb() {
 }
 
 const server = new ApolloServer({
-	typeDefs: fs.readFileSync('./server/schema.graphql', 'utf-8'),
+	typeDefs: fs.readFileSync('schema.graphql', 'utf-8'),
 	resolvers,
 	formatError: error => {
 		console.log(error);
@@ -101,14 +101,12 @@ const server = new ApolloServer({
 
 const app = express();
 
-app.use(express.static('public'));
-
 server.applyMiddleware({ app, path: '/graphql' });
 
 (async function () {
 	try {
 		await connectToDb();
-		app.listen(3000, () => console.log('App started at port 3000'));
+		app.listen(port, () => console.log(`API server started at port ${port}`));
 	} catch (err) {
 		console.log('ERROR: ', err);
 	}
