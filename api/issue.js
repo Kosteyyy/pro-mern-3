@@ -33,4 +33,10 @@ async function list(_, { status }) {
   return issues;
 }
 
-module.exports = { list, add };
+async function get(_, { id }) {
+  const db = getDb();
+  const issue = await db.collection('issues').findOne({ id });
+  return issue;
+}
+
+module.exports = { list, add, get };
